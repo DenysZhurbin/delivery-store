@@ -1,3 +1,4 @@
+//Данные
 var state = {
   products: [
     {
@@ -9,18 +10,19 @@ var state = {
     {
       name: "product-2",
       title: "Стул 2 из данных",
-      quantity: 600,
+      quantity: 9,
       orderAmount: 0
     },
     {
       name: "product-3",
       title: "Стул 3 из данных",
-      quantity: 100,
+      quantity: 8,
       orderAmount: 0
     },
   ],
 };
 
+//Отрисовка разметки
 function render(data) {
   var outputContainer = document.getElementsByClassName("container")[0];
   var products = data.products;
@@ -38,7 +40,7 @@ function render(data) {
     // innerHtml = принимает строку, которую браузер понимает как html (будет как дочерний контент dom node)
     productElement.innerHTML = `<div class="product__title">${product.title}</div>
       <div class="product__actions" data-product-index="${i}" data-product-name="${product.name}">
-          <input type="text" value="${product.quantity}" class="form-control form-control--available-quantity">
+          <input type="text" value="${product.quantity}" class="form-control form-control--available-quantity" readonly>
           <input type="text" value="${product.orderAmount}" class="form-control form-control--order-amount">
           <button type="button" class="btn btn-primary btn-increase-order-amount">Add</button>
       </div>`;
@@ -48,6 +50,7 @@ function render(data) {
   }
 }
 
+//Действия пользователя
 function handleUserAction() {
   var productsElements = document.getElementsByClassName("product");
 
@@ -58,15 +61,21 @@ function handleUserAction() {
     button.addEventListener("click", function (event) {
       var button = event.target;
       var productIndex = button.parentNode.getAttribute("data-product-index");
+      var quantityValue = state.products[productIndex].quantity;
+      var orderAmountValue = state.products[productIndex].orderAmount += 1;
+      var input = button.parentNode.querySelectorAll('.form-control--order-amount')[0];
 
-      state.products[productIndex].orderAmount += 1;
-      // todo - заменить перерисовку на обновлние атрибута input
-      render(state);
-      handleUserAction();
+      if (orderAmountValue === quantityValue) {
+        button.disabled = true;
+      }
+      input.value = orderAmountValue;  
+      console.log(quantityValue);
     });
-
+//todo выровнять значение инпута пользователя, с quantity при максимальном значении. (работать с данніми, а не с инпутом).
+//querySelectorAll - прочесть как работает.
   }
 }
+
 
 function getOrderValues(state) {
   return {
@@ -74,6 +83,7 @@ function getOrderValues(state) {
   }
 }
 
+//Глобальная функция (запускает рабочие функции)
 function initCatalog() {
   render(state);
   handleUserAction();
