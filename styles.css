@@ -10,3 +10,16 @@
 .product__actions .btn {
     margin-top: 5px;
 }
+
+.modal2 {
+    width: 200px;
+    height: 600px;
+    border: 1px rgb(143, 35, 23);
+    background: radial-gradient(black, transparent);
+    display: none;
+}
+
+.modal2.is-visible {
+    display: block;
+}
+
