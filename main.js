@@ -4,7 +4,7 @@ var state = {
     {
       name: "product-1",
       title: "Стул 1 из данных",
-      quantity: 3,
+      quantity: 345,
       orderAmount: 0
     },
     {
@@ -33,7 +33,6 @@ function render(data) {
 
   for (var i = 0; i < products.length; i++) {
     var product = products[i];
-
     var productElement = document.createElement("div");
     // classList.add добавляет имя класса к уже имеющемуюся блоку (dom node)
     productElement.classList.add('product');
@@ -41,6 +40,7 @@ function render(data) {
     productElement.innerHTML = `<div class="product__title">${product.title}</div>
       <div class="product__actions" data-product-index="${i}" data-product-name="${product.name}">
           <input type="text" value="${product.quantity}" class="form-control form-control--available-quantity" readonly>
+          <input type="text" value="${product.orderAmount}" id="user-input" class="form-control form-control--order-amount">
           <input type="text" value="${product.orderAmount}" class="form-control form-control--order-amount">
           <button type="button" class="btn btn-primary btn-increase-order-amount">Add</button>
       </div>`;
@@ -57,6 +57,7 @@ function handleUserAction() {
   for (var i = 0; i < productsElements.length; i++) {
     var product = productsElements[i];
     var button = product.querySelectorAll(".btn-increase-order-amount")[0];
+    var userInput = product.querySelectorAll('#user-input')[0]; //document.getElementById('user-input');
 
     button.addEventListener("click", function (event) {
       var button = event.target;
@@ -64,6 +65,24 @@ function handleUserAction() {
       var quantityValue = state.products[productIndex].quantity;
       var orderAmountValue = state.products[productIndex].orderAmount += 1;
       var input = button.parentNode.querySelectorAll('.form-control--order-amount')[0];
+      
+      if (orderAmountValue === quantityValue) {
+        button.disabled = true;
+      }
+      input.value = orderAmountValue;   
+    });
+    
+    userInput.addEventListener('keyup', function(event) {
+      var button = event.target;
+      var productIndex = button.parentNode.getAttribute("data-product-index");
+      var quantityValue = state.products[productIndex].quantity;
+
+      if (event.target.value >= quantityValue) {
+        event.target.value = quantityValue;
+        console.log(quantityValue.value.length);
+        console.log(quantityValue);
+      }
+    });
 
       if (orderAmountValue === quantityValue) {
         button.disabled = true;
